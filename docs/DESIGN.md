@@ -20,7 +20,7 @@ The Sales Agents system follows a **multi-agent orchestration pattern** with thr
 └─────────────────────────────────────────┘
               ↓
        [OpenAI API]
-       - gpt-4-mini model
+       - gpt-5.4-mini model
        - Agents SDK Runner
 ```
 
@@ -58,7 +58,8 @@ The Sales Agents system follows a **multi-agent orchestration pattern** with thr
 Each agent is defined using the OpenAI Agents SDK's `Agent` class, specifying:
 - A unique name.
 - System instructions (persona, tone, style guide).
-- The model (`gpt-4-mini`).
+- The model (`gpt-5.4-mini` — `gpt-4-mini` does not exist as an OpenAI model;
+  corrected after live testing against a real API key).
 - No tools (tool-free for MVP).
 
 ### 2.1 Agent: "The Professional"
