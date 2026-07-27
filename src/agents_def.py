@@ -6,6 +6,11 @@ and the sales picker agent that ranks their output, per docs/DESIGN.md § 2.
 
 from agents import Agent, Runner
 
+# docs/DESIGN.md specifies "gpt-4-mini", which does not exist as an OpenAI
+# model; gpt-5.4-mini is the nearest available equivalent (confirmed against
+# a live API key) and is what joke-agent already uses.
+MODEL = "gpt-5.4-mini"
+
 PROSPECT_CONTEXT_TEMPLATE = """\
 Prospect Company: {company}
 Industry: {industry}
@@ -103,25 +108,25 @@ Do NOT rank all three; pick one and defend it clearly.
 professional_agent = Agent(
     name="The Professional",
     instructions=PROFESSIONAL_INSTRUCTIONS,
-    model="gpt-4-mini",
+    model=MODEL,
 )
 
 witty_agent = Agent(
     name="The Witty",
     instructions=WITTY_INSTRUCTIONS,
-    model="gpt-4-mini",
+    model=MODEL,
 )
 
 concise_agent = Agent(
     name="The Concise",
     instructions=CONCISE_INSTRUCTIONS,
-    model="gpt-4-mini",
+    model=MODEL,
 )
 
 sales_picker_agent = Agent(
     name="Sales Picker",
     instructions=SALES_PICKER_INSTRUCTIONS,
-    model="gpt-4-mini",
+    model=MODEL,
 )
 
 
