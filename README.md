@@ -35,26 +35,26 @@ export OPENAI_API_KEY="sk-..."
 ### Run
 
 ```bash
-# Run the app with interactive prompts
 uv run python src/sales_agents.py
-
-# Or pass arguments directly (future enhancement)
-uv run python src/sales_agents.py \
-  --company "TechStartup Inc." \
-  --industry "FinTech" \
-  --pain-point "Manual data reconciliation between payment systems" \
-  --outcome "Automate reconciliation to reduce errors and save 10 hours/week"
 ```
 
+The app prompts interactively for the four prospect fields (company name,
+industry, pain point, desired outcome) — there are no CLI flags in this MVP.
+
 ## Example Usage
+
+This is real output from a live run (see `docs/EXAMPLE-RUNS.md` for the full
+text of all three emails and two more scenarios):
 
 ```
 $ uv run python src/sales_agents.py
 
-Enter prospect company name: Acme Financial
-Enter prospect industry: Finance
-Enter prospect pain point: Manual reconciliation of payment records
-Enter desired outcome: Automate reconciliation to save 8 hours/week
+Enter prospect details:
+
+Company name: Acme Financial
+Industry: Finance
+Pain point: Manual reconciliation of payment records
+Desired outcome: Automate reconciliation to save 8 hours/week
 
 === GENERATED SALES EMAILS ===
 
@@ -63,42 +63,70 @@ AGENT: The Professional
 PERSONA: Formal, credentials-focused, B2B expert
 ═══════════════════════════════════════════════════════════════
 
-Subject: TechFlow's Proven Reconciliation Automation for Financial Services
+Subject: Reducing Manual Reconciliation Time at Acme Financial
 
-Dear Prospect,
+Dear Acme Financial Team,
 
-[Professional email emphasizing ROI, compliance, case studies...]
+Manual reconciliation of payment records continues to consume valuable
+finance team time and increases the risk of avoidable errors...
 
-───────────────────────────────────────────────────────────────
-
-[Two more emails from "The Witty" and "The Concise" follow...]
+[The Witty and The Concise emails follow, each with a distinct tone —
+see docs/EXAMPLE-RUNS.md for the full text]
 
 ═══════════════════════════════════════════════════════════════
 SALES PICKER RECOMMENDATION
 ═══════════════════════════════════════════════════════════════
 
-Best Email: The Concise
+Best Email: The Professional
 
-Reasoning: Finance buyers value time efficiency and clear ROI. The Concise email's
-bullet-point format and focus on quantifiable time savings will resonate strongly
-with busy operations managers.
-
-───────────────────────────────────────────────────────────────
+Reasoning: It best fits the finance industry and the seriousness of Acme
+Financial's pain point, which increases credibility and trust. It clearly
+connects automation to compliance, accuracy, and the promised 8+ hours
+saved, with a persuasive CTA that feels appropriate for a regulated
+financial buyer.
 ```
+
+## Troubleshooting
+
+**"Invalid API key" / `openai.AuthenticationError`**
+Ensure `OPENAI_API_KEY` is set correctly — either exported in your shell or
+in a `.env` file in the project root (loaded automatically via
+`python-dotenv`). The key must have access to the `gpt-5.4-mini` model.
+
+**"Rate limit reached. Please retry in a moment."**
+The OpenAI API is rate-limiting your key. Wait and retry — the app runs the
+three email agents sequentially rather than in parallel specifically to
+reduce how often this happens.
+
+**"[agent_key] email generation failed"**
+One of the three email agents hit an error (shown above this message). The
+other agents still run — the app degrades gracefully rather than aborting
+the whole request. If all three fail, the app exits with a non-zero code and
+skips the picker (nothing to rank).
+
+**"The requested model '...' does not exist"**
+The model name in `src/agents_def.py` (`MODEL` constant) isn't available to
+your API key. `gpt-5.4-mini` is confirmed working as of this writing; if
+OpenAI retires it, update the constant to a current equivalent.
 
 ## Project Structure
 
 ```
 sales-agents/
 ├── README.md                    # This file
+├── .github/workflows/ci.yml     # Lint, format check, smoke-import, pytest
 ├── src/
 │   ├── sales_agents.py          # Main CLI entry point
 │   ├── agents_def.py            # Agent definitions and orchestration
 │   └── utils.py                 # Utility functions (formatting, validation)
+├── tests/
+│   ├── test_agents_def.py       # Unit tests for picker-output parsing
+│   └── test_utils.py            # Unit tests for validation/formatting
 ├── docs/
 │   ├── OPERATIONAL-CONCEPT.md   # Use case, problem statement, system flow
 │   ├── REQUIREMENTS.md          # Functional and non-functional requirements
-│   └── DESIGN.md                # Architecture, agent definitions, data flow
+│   ├── DESIGN.md                # Architecture, agent definitions, data flow
+│   └── EXAMPLE-RUNS.md          # Real output from 3 live test scenarios
 └── pyproject.toml               # Project dependencies (uv)
 ```
 
@@ -109,10 +137,11 @@ All documentation is in the `docs/` folder:
 - **[OPERATIONAL-CONCEPT.md](docs/OPERATIONAL-CONCEPT.md)** — What problem does this solve? What is the user flow?
 - **[REQUIREMENTS.md](docs/REQUIREMENTS.md)** — Detailed functional (FR) and non-functional (NFR) requirements, user stories, assumptions.
 - **[DESIGN.md](docs/DESIGN.md)** — Architecture, component descriptions, agent persona definitions, execution flow, output format spec.
+- **[EXAMPLE-RUNS.md](docs/EXAMPLE-RUNS.md)** — Real, unedited output from 3 live test scenarios (FinTech, Creative, Enterprise), including the sales picker's actual reasoning.
 
 **Implementation Planning:**
 - **[IMPLEMENTATION-PLAN.md](docs/IMPLEMENTATION-PLAN.md)** — Detailed 4-phase roadmap with PRs and merge criteria
-- **[STATUS-TRACKING.md](docs/STATUS-TRACKING.md)** — Progress dashboard with 17 tracked tasks
+- **[STATUS-TRACKING.md](docs/STATUS-TRACKING.md)** — Progress dashboard, phase-by-phase status, and notes on what was learned during implementation
 - **[READY-TO-START.md](docs/READY-TO-START.md)** — Quick start guide for developers
 - **[PR-TEMPLATE.md](docs/PR-TEMPLATE.md)** — Ready-to-use PR descriptions
 
@@ -120,9 +149,10 @@ All documentation is in the `docs/` folder:
 
 - **Language:** Python 3.12+
 - **LLM Framework:** OpenAI Agents SDK (`openai-agents`)
-- **LLM Model:** `gpt-4-mini` (or latest equivalent)
+- **LLM Model:** `gpt-5.4-mini` (set via the `MODEL` constant in `src/agents_def.py`)
 - **API:** OpenAI API
 - **Package Manager:** `uv`
+- **CI:** GitHub Actions — `ruff check`, `ruff format --check`, a smoke-import of all `src/` modules, and `pytest`, on every PR and push to `main`
 
 ## Key Concepts
 
@@ -138,10 +168,18 @@ A fourth agent that reviews all three emails and selects the most compelling opt
 
 ### Observability
 
-All agent runs (3 email generators + 1 picker) are automatically traced via the OpenAI Agents SDK and visible in the OpenAI platform Traces dashboard:
+All agent runs (3 email generators + 1 picker) are automatically traced via
+the OpenAI Agents SDK — every run sends the trace to the OpenAI platform,
+with no extra instrumentation needed:
 - Navigate to [platform.openai.com → Traces](https://platform.openai.com/traces)
 - View each agent's input, model call, and output
 - Useful for debugging, auditing, and iterating on prompts
+
+Verified during Phase 2 testing: every agent call's `POST /v1/traces/ingest`
+request returned a successful `204 No Content` across all 3 test scenarios
+(see `docs/EXAMPLE-RUNS.md`). This was confirmed at the API/HTTP level rather
+than by visually checking the dashboard UI, since both report the same
+underlying data.
 
 ## Error Handling
 
@@ -187,6 +225,6 @@ This project is part of the Anthropic [Claude Code](https://claude.ai/code) port
 
 ---
 
-**Project Status:** MVP complete (documentation and design phase)  
-**Last Updated:** 2026-07-27  
-**Next Steps:** Implementation of `src/sales_agents.py`, `src/agents_def.py`, and `src/utils.py`
+**Project Status:** Phases 1 & 2 complete (core implementation, live-tested against a real API key). Phase 3 (documentation polish) in progress; Phase 4 (release/deployment) not started.
+**Last Updated:** 2026-07-27
+**Repository:** [github.com/natank/sales-agents](https://github.com/natank/sales-agents)
