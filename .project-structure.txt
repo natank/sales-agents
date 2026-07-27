@@ -1,0 +1,118 @@
+Sales Agents Project Structure
+================================
+
+sales-agents/
+│
+├── README.md
+│   └─ Main entry point; quick start, tech stack, features, usage examples
+│
+├── IMPLEMENTATION-CHECKLIST.md
+│   └─ Phase-by-phase tasks, success criteria, estimated effort
+│
+├── pyproject.toml
+│   └─ Python dependencies (openai, python-dotenv), version, metadata
+│
+├── src/ (PLACEHOLDER - to be implemented)
+│   ├── sales_agents.py
+│   │   └─ CLI entry point, orchestration, output formatting
+│   ├── agents_def.py
+│   │   └─ Agent definitions (3 email generators + 1 picker)
+│   └── utils.py
+│       └─ Formatting, validation, error handling helpers
+│
+└── docs/
+    ├── SUMMARY.md
+    │   └─ High-level overview, problem/solution, key features
+    │
+    ├── OPERATIONAL-CONCEPT.md
+    │   └─ Use case, problem statement, system flow, fictional context
+    │
+    ├── REQUIREMENTS.md
+    │   └─ Functional (FR) & non-functional (NFR) requirements, user stories
+    │
+    └── DESIGN.md
+        └─ Architecture, agent definitions, execution flow, error handling
+
+Key Concepts
+============
+
+1. PERSONAS
+   - Professional: Formal, ROI-focused, credentials-driven
+   - Witty: Clever, conversational, humor-based
+   - Concise: Direct, scannable, time-respecting
+
+2. FLOW
+   Prospect Input → 3 Email Agents (parallel) → Picker Agent → Recommendation
+
+3. TECHNOLOGY
+   - Language: Python 3.12+
+   - Framework: OpenAI Agents SDK
+   - Model: gpt-4-mini
+   - Observability: OpenAI Traces dashboard
+
+4. SCOPE
+   MVP (documented):
+   - Multi-agent orchestration
+   - Three distinct personas
+   - Expert ranking agent
+   - CLI interface
+   - Automatic tracing
+
+   Future enhancements:
+   - Tools (prospect research, email validation)
+   - Web UI
+   - Persistent storage
+   - A/B testing / conversion tracking
+   - Email delivery integration
+
+Document Roadmap
+================
+
+Start here:        README.md → Quick start & overview
+Understand why:    OPERATIONAL-CONCEPT.md → Problem/solution, use case
+Define what:       REQUIREMENTS.md → Detailed FR/NFR, user stories
+Design how:        DESIGN.md → Architecture, agents, flow
+Get started:       IMPLEMENTATION-CHECKLIST.md → Phase-by-phase tasks
+Quick recap:       SUMMARY.md → At-a-glance summary
+
+Next Steps (Implementation)
+===========================
+
+1. [ ] Create src/agents_def.py
+   - Define 4 agents (3 email generators + 1 picker)
+   - Implement generate_email() and pick_best_email() functions
+
+2. [ ] Create src/utils.py
+   - Implement formatting and validation helpers
+   - Error logging and user-friendly messages
+
+3. [ ] Create src/sales_agents.py
+   - Implement CLI entry point
+   - Orchestrate the workflow
+   - Handle errors gracefully
+
+4. [ ] Test & Validate
+   - Manual testing with sample scenarios
+   - Check traces in OpenAI platform dashboard
+   - Iterate on agent prompts
+
+5. [ ] Polish & Release
+   - Update README with real examples
+   - Code quality (PEP 8, type hints, docstrings)
+   - Git commit and push
+
+Fictional Company Context
+==========================
+
+Company: TechFlow Solutions
+Product: Workflow automation platform
+Industry: SaaS / Enterprise IT
+Typical Prospect: Operations manager at mid-sized tech/finance firm
+Pain Point: Manual handoff processes, data-entry bottlenecks
+Value Prop: Automate workflows; reduce manual work; improve accuracy
+
+This context is used across all agent prompts to ensure consistency.
+
+---
+Last Updated: 2026-07-27
+Status: Documentation Complete - Ready for Implementation
