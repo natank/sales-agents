@@ -78,22 +78,37 @@ available then to catch it). First live run failed immediately with a 400.
 Fixed to `gpt-5.4-mini` via a `MODEL` constant in `agents_def.py`; see
 [PR #4](https://github.com/natank/sales-agents/pull/4).
 
-## Phase 3: Documentation & Polish
+## Phase 3: Documentation & Polish ✅ COMPLETE (merged [PR #5](https://github.com/natank/sales-agents/pull/5), [PR #6](https://github.com/natank/sales-agents/pull/6))
 
-- [ ] **README Updates**
-  - [ ] Verify quick start instructions work end-to-end
-  - [ ] Update example output with real run results
-  - [ ] Add troubleshooting section if needed
+- [x] **README Updates**
+  - [x] Verify quick start instructions work end-to-end — re-ran fresh with
+        `OPENAI_API_KEY` unset to confirm `.env` auto-load matches what's
+        documented
+  - [x] Update example output with real run results — replaced fabricated
+        placeholder text with the actual Scenario A output
+  - [x] Add troubleshooting section — covers auth, rate limit, per-agent
+        failure, and model-not-found (the last one wasn't in the original
+        plan template, added because it's what actually happened)
 
-- [ ] **Design Documentation**
-  - [ ] Capture any deviations from design doc in DESIGN.md
-  - [ ] Update agent persona descriptions with final prompts
-  - [ ] Document any error cases discovered during testing
+- [x] **Design Documentation**
+  - [x] Capture any deviations from design doc in DESIGN.md — done directly
+        in [PR #4](https://github.com/natank/sales-agents/pull/4) when the
+        `gpt-4-mini` → `gpt-5.4-mini` fix was made, not deferred to this phase
+  - [x] Persona descriptions already matched the final prompts (no drift
+        found on review)
+  - [x] Error cases discovered during testing documented in
+        `docs/STATUS-TRACKING.md` Phase 2 and in the README's new
+        Troubleshooting section
 
-- [ ] **Example Scenarios**
-  - [ ] Create example.md with 2-3 sample runs
-  - [ ] Include prospect context, generated emails, and picker choice
-  - [ ] Document reasoning behind picker's selection
+- [x] **Example Scenarios**
+  - [x] Created `docs/EXAMPLE-RUNS.md` with all 3 sample runs (done in PR #5,
+        pulled forward from this phase since the real data was already
+        captured during Phase 2 testing)
+  - [x] Includes prospect context, generated emails, and picker choice for
+        each scenario
+  - [x] Documents the picker's reasoning for each scenario, plus a summary
+        table comparing actual choices against the plan's original
+        (pre-testing) predictions
 
 ## Phase 4: Deployment & Distribution
 
