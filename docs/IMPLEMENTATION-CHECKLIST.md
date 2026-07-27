@@ -2,37 +2,43 @@
 
 This checklist tracks the implementation of the Sales Agents project from design to launch.
 
-## Phase 1: Core Implementation
+## Phase 1: Core Implementation ✅ COMPLETE (merged [PR #2](https://github.com/natank/sales-agents/pull/2))
 
-- [ ] **src/agents_def.py** — Agent definitions
-  - [ ] Import OpenAI Agents SDK classes (`Agent`, `Runner`)
-  - [ ] Define `professional_agent` with system instructions
-  - [ ] Define `witty_agent` with system instructions
-  - [ ] Define `concise_agent` with system instructions
-  - [ ] Define `sales_picker_agent` with system instructions
-  - [ ] Implement `generate_email(agent, prospect_context) → str`
-  - [ ] Implement `pick_best_email(emails, prospect_context) → (str, str)`
+- [x] **src/agents_def.py** — Agent definitions
+  - [x] Import OpenAI Agents SDK classes (`Agent`, `Runner`)
+  - [x] Define `professional_agent` with system instructions
+  - [x] Define `witty_agent` with system instructions
+  - [x] Define `concise_agent` with system instructions
+  - [x] Define `sales_picker_agent` with system instructions
+  - [x] Implement `generate_email(agent, prospect_context) → str`
+  - [x] Implement `pick_best_email(emails, prospect_context) → (str, str)`
+        (parsing extracted into standalone `parse_picker_output()`, unit tested)
 
-- [ ] **src/utils.py** — Utility functions
-  - [ ] Implement `validate_prospect_input(company, industry, pain_point, outcome) → bool`
-  - [ ] Implement `format_email_output(agent_name, persona, email_text) → str`
-  - [ ] Implement `format_picker_output(chosen_agent, reasoning) → str`
-  - [ ] Implement error logging / user-friendly error messages
-  - [ ] Implement input prompts for CLI
+- [x] **src/utils.py** — Utility functions
+  - [x] Implement `validate_prospect_input(company, industry, pain_point, outcome) → bool`
+  - [x] Implement `format_email_output(agent_name, persona, email_text) → str`
+  - [x] Implement `format_picker_output(chosen_agent, reasoning) → str`
+  - [x] Implement error logging / user-friendly error messages
+  - [x] Implement input prompts for CLI
 
-- [ ] **src/sales_agents.py** — Main CLI entry point
-  - [ ] Import dependencies and local modules
-  - [ ] Implement `main()` function
-  - [ ] Implement CLI argument parsing (or interactive prompts)
-  - [ ] Implement `orchestrate_emails(prospect_context) → dict`
-  - [ ] Implement `orchestrate_picker(emails, prospect_context) → (str, str)`
-  - [ ] Implement main workflow:
+- [x] **src/sales_agents.py** — Main CLI entry point
+  - [x] Import dependencies and local modules
+  - [x] Implement `main()` function
+  - [x] Implement CLI argument parsing (or interactive prompts)
+  - [x] Implement `orchestrate_emails(prospect_context) → dict`
+  - [x] Implement `orchestrate_picker(emails, prospect_context) → (str, str)`
+  - [x] Implement main workflow:
     1. Collect prospect input
     2. Generate emails
     3. Print emails
     4. Run picker
     5. Print picker result
-  - [ ] Error handling and graceful fallbacks
+  - [x] Error handling and graceful fallbacks
+
+**Notes:**
+- `pyproject.toml` had the wrong dependency (`openai` instead of `openai-agents`) — fixed in this phase.
+- 13 unit tests added (`tests/test_agents_def.py`, `tests/test_utils.py`) covering all pure-logic paths.
+- Live agent runs and OpenAI Traces verification were not possible (no `OPENAI_API_KEY` in the implementation environment) — carried into Phase 2's existing scope, not a new task.
 
 ## Phase 2: Testing & Validation
 
