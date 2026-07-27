@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  lint-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Lint (ruff)
+        run: uv run ruff check src $( [ -d tests ] && echo tests )
+
+      - name: Format check (ruff)
+        run: uv run ruff format --check src $( [ -d tests ] && echo tests )
+
+      - name: Smoke-import src modules
+        run: |
+          if [ -d src ] && [ -n "$(find src -name '*.py' -print -quit)" ]; then
+            uv run python -c "import sys; sys.path.insert(0, 'src'); import importlib, pathlib
+          for f in pathlib.Path('src').glob('*.py'):
+              mod = f.stem
+              print(f'importing {mod}')
+              importlib.import_module(mod)"
+          else
+            echo "No src/*.py files yet — skipping smoke import"
+          fi
+
+      - name: Run tests (pytest)
+        run: |
+          if [ -d tests ] && [ -n "$(find tests -name 'test_*.py' -print -quit)" ]; then
+            uv run pytest
+          else
+            echo "No tests/ yet — skipping"
+          fi

@@ -1,0 +1,26 @@
+[project]
+name = "sales-agents"
+version = "0.1.0"
+description = "Multi-agent cold email generator using OpenAI Agents SDK"
+authors = [
+    { name = "Nathan Kamusher", email = "natan.kamusher@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "openai>=1.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.6.0",
+    "pytest>=8.0.0",
+]
+
+[tool.ruff]
+# Only lint/format actual Python source, not fenced code samples in docs/*.md
+src = ["src", "tests"]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
