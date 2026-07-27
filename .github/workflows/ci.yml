@@ -25,10 +25,10 @@ jobs:
         run: uv sync --dev
 
       - name: Lint (ruff)
-        run: uv run ruff check .
+        run: uv run ruff check src $( [ -d tests ] && echo tests )
 
       - name: Format check (ruff)
-        run: uv run ruff format --check .
+        run: uv run ruff format --check src $( [ -d tests ] && echo tests )
 
       - name: Smoke-import src modules
         run: |

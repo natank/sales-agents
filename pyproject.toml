@@ -11,11 +11,15 @@ dependencies = [
     "python-dotenv>=1.0.0",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "ruff>=0.6.0",
     "pytest>=8.0.0",
 ]
+
+[tool.ruff]
+# Only lint/format actual Python source, not fenced code samples in docs/*.md
+src = ["src", "tests"]
 
 [build-system]
 requires = ["setuptools", "wheel"]
